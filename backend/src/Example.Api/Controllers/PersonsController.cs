@@ -7,11 +7,11 @@ namespace Example.Api.Controllers;
 [Route("api/[controller]")]
 public class PersonsController : ControllerBase
 {
-    private readonly RegisterPersonHandler _registerPerson;
+    private readonly IPersonService _personService;
 
-    public PersonsController(RegisterPersonHandler registerPerson)
+    public PersonsController(IPersonService personService)
     {
-        _registerPerson = registerPerson;
+        _personService = personService;
     }
 
     /// <summary>Registers a person and returns the generated database Id.</summary>
@@ -22,7 +22,7 @@ public class PersonsController : ControllerBase
     {
         try
         {
-            var id = await _registerPerson.HandleAsync(request, cancellationToken);
+            var id = await _personService.RegisterAsync(request, cancellationToken);
             return Created($"/api/persons/{id}", new RegisterPersonResponse(id));
         }
         catch (ValidationException ex)

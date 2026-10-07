@@ -1,6 +1,6 @@
-import { Component, ElementRef, ViewChild, inject, output, signal } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, inject, output, signal } from '@angular/core';
 import { AbstractControl, FormBuilder, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
-import { PersonService } from './person.service';
+import { Occupation, PersonService, RegisterPersonRequest } from './person.service';
 
 @Component({
   selector: 'app-person-form',
@@ -8,23 +8,14 @@ import { PersonService } from './person.service';
   templateUrl: './person-form.component.html',
   styleUrl: './person-form.component.css',
 })
-export class PersonFormComponent {
+export class PersonFormComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly persons = inject(PersonService);
 
   @ViewChild('profileInput') profileInput!: ElementRef<HTMLInputElement>;
   @ViewChild('birthDayPicker') birthDayPicker!: ElementRef<HTMLInputElement>;
 
-  readonly occupations = [
-    'Software Developer',
-    'System Analyst',
-    'Project Manager',
-    'QA Engineer',
-    'UX/UI Designer',
-    'Business Analyst',
-    'DevOps Engineer',
-    'Data Engineer',
-  ];
+  readonly occupations = signal<Occupation[]>([]);
 
   readonly profileFileName = signal('');
   readonly toastMessage = signal('');
@@ -35,6 +26,12 @@ export class PersonFormComponent {
   readonly cleared = output<void>();
 
   private toastTimer: ReturnType<typeof setTimeout> | null = null;
+
+  ngOnInit(): void {
+    this.persons.getOccupations().subscribe({
+      next: (list) => this.occupations.set(list),
+    });
+  }
 
   readonly form = this.fb.group({
     firstName: ['', Validators.required],
@@ -122,7 +119,18 @@ export class PersonFormComponent {
     }
 
     this.saving.set(true);
-    this.persons.register(this.form.getRawValue() as never).subscribe({
+    const raw = this.form.getRawValue();
+    const request: RegisterPersonRequest = {
+      firstName: raw.firstName!,
+      lastName: raw.lastName!,
+      email: raw.email!,
+      phone: raw.phone!,
+      profile: raw.profile!,
+      birthDay: raw.birthDay!,
+      occupationId: Number(raw.occupation),
+      sex: raw.sex!,
+    };
+    this.persons.register(request).subscribe({
       next: (res) => {
         this.saving.set(false);
         this.showToast(`save data success Id : ${res.id}`);

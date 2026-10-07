@@ -16,7 +16,8 @@ public class RegisterPersonRequest
     /// <summary>Birth day in day/month/year format, e.g. 15/08/1995.</summary>
     public string? BirthDay { get; set; }
 
-    public string? Occupation { get; set; }
+    /// <summary>Id of the selected occupation (master data from the occupations table).</summary>
+    public int? OccupationId { get; set; }
 
     public string? Sex { get; set; }
 }

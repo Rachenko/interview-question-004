@@ -13,7 +13,7 @@ public class RegisterPersonValidatorTests
         Phone = "081-234-5678",
         Profile = Convert.ToBase64String(new byte[] { 1, 2, 3 }),
         BirthDay = "15/08/1995",
-        Occupation = "Developer",
+        OccupationId = 1,
         Sex = "male"
     };
 
@@ -100,7 +100,7 @@ public class RegisterPersonValidatorTests
     public void Missing_occupation_fails()
     {
         var request = ValidRequest();
-        request.Occupation = "";
+        request.OccupationId = null;
 
         var errors = RegisterPersonValidator.Validate(request);
 

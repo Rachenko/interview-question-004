@@ -69,8 +69,8 @@
         <label for="occupation">Occupation</label>
         <select id="occupation" formControlName="occupation">
           <option value="" disabled selected></option>
-          @for (job of occupations; track job) {
-            <option [value]="job">{{ job }}</option>
+          @for (job of occupations(); track job.id) {
+            <option [value]="job.id">{{ job.name }}</option>
           }
         </select>
         @if (error('occupation')) {

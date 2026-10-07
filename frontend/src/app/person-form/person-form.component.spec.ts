@@ -37,7 +37,7 @@ describe('PersonFormComponent', () => {
       phone: '081-234-5678',
       profile: 'data:image/png;base64,AQID',
       birthDay: '15/08/1995',
-      occupation: 'Developer',
+      occupation: '1',
       sex: 'male',
     });
   }
@@ -65,6 +65,7 @@ describe('PersonFormComponent', () => {
     const req = http.expectOne('http://localhost:5134/api/persons');
     expect(req.request.method).toBe('POST');
     expect(req.request.body.email).toBe('somchai@example.com');
+    expect(req.request.body.occupationId).toBe(1);
     req.flush({ id: 7 });
 
     expect(c.toastMessage()).toBe('save data success Id : 7');

@@ -1,3 +1,4 @@
+using Example.Application.Occupations;
 using Example.Application.Persons;
 using Example.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -11,7 +12,9 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<IPersonRepository, PersonRepository>();
-builder.Services.AddScoped<RegisterPersonHandler>();
+builder.Services.AddScoped<IOccupationRepository, OccupationRepository>();
+builder.Services.AddScoped<IPersonService, PersonService>();
+builder.Services.AddScoped<IOccupationService, OccupationService>();
 
 const string CorsPolicy = "Frontend";
 var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>()

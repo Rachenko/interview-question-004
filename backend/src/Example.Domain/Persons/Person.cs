@@ -23,7 +23,9 @@ public class Person
 
     public DateOnly BirthDay { get; set; }
 
-    public string Occupation { get; set; } = string.Empty;
+    public int OccupationId { get; set; }
+
+    public Occupation? Occupation { get; set; }
 
     public Sex Sex { get; set; }
 

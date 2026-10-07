@@ -63,7 +63,7 @@ public static class RegisterPersonValidator
             errors["birthDay"] = "Please provide a valid Birth Day";
         }
 
-        if (string.IsNullOrWhiteSpace(request.Occupation))
+        if (!request.OccupationId.HasValue || request.OccupationId.Value <= 0)
             errors["occupation"] = "Please selected any Occupation";
 
         if (string.IsNullOrWhiteSpace(request.Sex))

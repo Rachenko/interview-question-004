@@ -8,7 +8,7 @@ Profile registration app (IT 04-1) — built as if developed at **example.com**.
 
 ## Features
 
-- Registration form (IT 04-1): First Name, Last Name, Email, Phone, Profile (image stored as Base64), Birth Day (`dd/MM/yyyy`), Occupation (combo box, mock data), Sex (Male/Female radio)
+- Registration form (IT 04-1): First Name, Last Name, Email, Phone, Profile (image stored as Base64), Birth Day (`dd/MM/yyyy`), Occupation (combo box, master data from `occupations` table), Sex (Male/Female radio)
 - Validation before saving — every field is required; Email, Phone and Birth Day are format-checked on both the form and the API
 - `Save` posts to `POST /api/persons`, shows `save data success Id : {id}` and clears the form
 - `Clear` resets the form
@@ -17,10 +17,10 @@ Profile registration app (IT 04-1) — built as if developed at **example.com**.
 
 ```
 backend/
-  src/Example.Domain/           Entities (Person, Sex)
-  src/Example.Application/      RegisterPersonRequest, validator, handler, IPersonRepository
-  src/Example.Infrastructure/   AppDbContext, PersonRepository, EF migrations
-  src/Example.Api/              PersonsController, DI, CORS, auto-migrate on start
+  src/Example.Domain/           Entities (Person, Occupation, Sex)
+  src/Example.Application/      RegisterPersonRequest, validator, IPersonService/PersonService, IOccupationService, repositories
+  src/Example.Infrastructure/   AppDbContext, PersonRepository, OccupationRepository, EF migrations (occupations seeded via SQL insert)
+  src/Example.Api/              PersonsController, OccupationsController, DI, CORS, auto-migrate on start
   tests/Example.Application.Tests/  xUnit tests (validator + handler)
 frontend/
   src/app/person-form/          Registration form component + PersonService
@@ -64,7 +64,7 @@ curl -X POST http://localhost:5134/api/persons \
     "phone": "081-234-5678",
     "profile": "AQID",
     "birthDay": "15/08/1995",
-    "occupation": "Software Developer",
+    "occupationId": 1,
     "sex": "male"
   }'
 # -> {"id": 1}
