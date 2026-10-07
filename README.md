@@ -116,3 +116,35 @@ dotnet run
 ```
 
 รอจนขึ้น `Now listening on: http://localhost:5134` แล้วค่อยเปิดหน้า frontend หรือเรียก API
+
+### error MSB3021/MSB3027: The file is locked by "Example.Api.exe"
+
+เกิดจากตัว API ตัวเก่ายังรันค้างอยู่ล็อก DLL ใน `bin\Debug` — ไม่ใช่บั๊กโค้ด
+
+แก้โดยปิด process เก่าก่อน build/run ใหม่:
+
+```powershell
+# หา PID ที่ล็อก (เลขในวงเล็บท้าย error เช่น 25524)
+taskkill /PID <เลข PID> /F
+
+# หรือฆ่าทุกตัวที่เกี่ยวข้อง
+taskkill /F /IM Example.Api.exe
+taskkill /F /IM dotnet.exe
+```
+
+ถ้า `taskkill` ขึ้น `Access is denied` หรือ process มี `Handles = 0` (zombie) ให้เปิด PowerShell แบบ **Run as administrator** แล้ว `Stop-Process -Name Example.Api -Force` — หรือ **Restart เครื่อง** ทีเดียวจบ
+
+**ทางลัดไม่ต้อง kill:** build ไปอีก configuration เพื่อเลี่ยงโฟลเดอร์ที่ถูกล็อก
+
+```powershell
+dotnet run --project backend/src/Example.Api -c Release
+```
+
+**กันไม่ให้เกิดซ้ำ:**
+- รัน API แค่ terminal เดียว — อย่าเปิด `dotnet run` ซ้อนกัน หรือซ้อนกับ `dotnet watch run` / debug ใน VS Code
+- จะ build/test ให้ Ctrl+C ปิดตัวที่รันก่อน หรือเปิด terminal ใหม่สำหรับ `dotnet test`
+- ใช้ `dotnet watch run --project backend/src/Example.Api` ถ้าอยากให้ rebuild+restart เองตอนแก้โค้ด
+
+### Swashbuckle TypeLoadException: Method 'GetSwagger' does not have an implementation
+
+Swashbuckle v9.x ไม่เข้ากับ .NET 10 (Microsoft.OpenApi 2.x) — ใช้ `Swashbuckle.AspNetCore` เวอร์ชัน **10.x** ขึ้นไป (repo นี้ pin ไว้ที่ 10.2.3 แล้ว)
