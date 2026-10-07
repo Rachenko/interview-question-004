@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild, inject, signal } from '@angular/core';
+import { Component, ElementRef, ViewChild, inject, output, signal } from '@angular/core';
 import { AbstractControl, FormBuilder, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import { PersonService } from './person.service';
 
@@ -30,6 +30,9 @@ export class PersonFormComponent {
   readonly toastMessage = signal('');
   readonly saving = signal(false);
   submitted = false;
+
+  readonly saved = output<void>();
+  readonly cleared = output<void>();
 
   private toastTimer: ReturnType<typeof setTimeout> | null = null;
 
@@ -123,7 +126,8 @@ export class PersonFormComponent {
       next: (res) => {
         this.saving.set(false);
         this.showToast(`save data success Id : ${res.id}`);
-        this.clear();
+        this.saved.emit();
+        this.resetForm();
       },
       error: () => {
         this.saving.set(false);
@@ -133,6 +137,11 @@ export class PersonFormComponent {
   }
 
   clear(): void {
+    this.resetForm();
+    this.cleared.emit();
+  }
+
+  private resetForm(): void {
     this.form.reset();
     this.profileFileName.set('');
     this.submitted = false;
