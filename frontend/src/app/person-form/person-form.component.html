@@ -1,0 +1,104 @@
+<div class="form-card">
+  @if (toastMessage()) {
+    <div class="toast">{{ toastMessage() }}</div>
+  }
+
+  <form [formGroup]="form" (ngSubmit)="save()" novalidate>
+    <div class="grid">
+      <div class="field">
+        <label for="firstName">First Name</label>
+        <input id="firstName" type="text" formControlName="firstName" />
+        @if (error('firstName')) {
+          <span class="error">{{ error('firstName') }}</span>
+        }
+      </div>
+
+      <div class="field">
+        <label for="lastName">Last Name</label>
+        <input id="lastName" type="text" formControlName="lastName" />
+        @if (error('lastName')) {
+          <span class="error">{{ error('lastName') }}</span>
+        }
+      </div>
+
+      <div class="field">
+        <label for="email">Email</label>
+        <input id="email" type="text" formControlName="email" />
+        @if (error('email')) {
+          <span class="error">{{ error('email') }}</span>
+        }
+      </div>
+
+      <div class="field">
+        <label for="phone">Phone</label>
+        <input id="phone" type="text" formControlName="phone" />
+        @if (error('phone')) {
+          <span class="error">{{ error('phone') }}</span>
+        }
+      </div>
+
+      <div class="field">
+        <label>Profile</label>
+        <div class="input-addon">
+          <input type="text" readonly [value]="profileFileName()" (click)="openProfilePicker()" />
+          <button type="button" class="addon-btn browse" (click)="openProfilePicker()">Browse</button>
+        </div>
+        <input #profileInput type="file" accept="image/*" hidden (change)="onProfileSelected($event)" />
+        @if (error('profile')) {
+          <span class="error">{{ error('profile') }}</span>
+        }
+      </div>
+
+      <div class="field">
+        <label for="birthDay">Birth Day</label>
+        <div class="input-addon">
+          <input id="birthDay" type="text" formControlName="birthDay" placeholder="dd/MM/yyyy" />
+          <button type="button" class="addon-btn calendar" (click)="openBirthDayPicker()" aria-label="Pick date">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="#fff">
+              <path d="M19 4h-1V2h-2v2H8V2H6v2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 16H5V10h14v10z"/>
+            </svg>
+          </button>
+        </div>
+        <input #birthDayPicker type="date" class="hidden-date" (change)="onBirthDayPicked($event)" />
+        @if (error('birthDay')) {
+          <span class="error">{{ error('birthDay') }}</span>
+        }
+      </div>
+
+      <div class="field">
+        <label for="occupation">Occupation</label>
+        <select id="occupation" formControlName="occupation">
+          <option value="" disabled selected></option>
+          @for (job of occupations; track job) {
+            <option [value]="job">{{ job }}</option>
+          }
+        </select>
+        @if (error('occupation')) {
+          <span class="error">{{ error('occupation') }}</span>
+        }
+      </div>
+
+      <div class="field">
+        <label>Sex</label>
+        <div class="radios">
+          <label class="radio">
+            <input type="radio" formControlName="sex" value="male" />
+            <span>Male</span>
+          </label>
+          <label class="radio">
+            <input type="radio" formControlName="sex" value="female" />
+            <span>Female</span>
+          </label>
+        </div>
+        @if (error('sex')) {
+          <span class="error">{{ error('sex') }}</span>
+        }
+      </div>
+    </div>
+
+    <div class="actions">
+      <button type="submit" class="btn save" [disabled]="saving()">Save</button>
+      <button type="button" class="btn clear" (click)="clear()">Clear</button>
+    </div>
+  </form>
+</div>
