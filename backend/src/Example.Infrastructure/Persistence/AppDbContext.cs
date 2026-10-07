@@ -30,7 +30,6 @@ public class AppDbContext : DbContext
                 .WithMany()
                 .HasForeignKey(p => p.OccupationId)
                 .IsRequired();
-            entity.Navigation(p => p.Occupation).AutoInclude();
             entity.Property(p => p.Sex).HasConversion<string>().HasMaxLength(10).IsRequired();
             entity.Property(p => p.CreatedAt).IsRequired();
         });
