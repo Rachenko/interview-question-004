@@ -42,7 +42,7 @@ docker compose up -d
 # 2. Start the API (http://localhost:5134, applies migrations on startup)
 cd backend
 dotnet run --project src/Example.Api
-# Swagger UI (dev): http://localhost:5134/swagger
+# OpenAPI spec (dev): http://localhost:5134/openapi/v1.json
 
 # 3. Start the frontend (http://localhost:4200)
 cd frontend
@@ -145,6 +145,6 @@ dotnet run --project backend/src/Example.Api -c Release
 - จะ build/test ให้ Ctrl+C ปิดตัวที่รันก่อน หรือเปิด terminal ใหม่สำหรับ `dotnet test`
 - ใช้ `dotnet watch run --project backend/src/Example.Api` ถ้าอยากให้ rebuild+restart เองตอนแก้โค้ด
 
-### Swashbuckle TypeLoadException: Method 'GetSwagger' does not have an implementation
+### อยากได้ Swagger UI
 
-Swashbuckle v9.x ไม่เข้ากับ .NET 10 (Microsoft.OpenApi 2.x) — ใช้ `Swashbuckle.AspNetCore` เวอร์ชัน **10.x** ขึ้นไป (repo นี้ pin ไว้ที่ 10.2.3 แล้ว)
+Repo นี้ใช้ OpenAPI built-in ของ .NET (spec อยู่ที่ `/openapi/v1.json` ตอน dev) ไม่ได้ติดตั้ง Swashbuckle — ถ้าอยากได้หน้า UI ให้ติดตั้ง `Swashbuckle.AspNetCore` เวอร์ชัน **10.x** ขึ้นไป (v9 ไม่เข้ากับ .NET 10 / Microsoft.OpenApi 2.x จะเจอ TypeLoadException)
