@@ -90,3 +90,28 @@ npm test
 ```bash
 docker compose down -v && docker compose up -d
 ```
+
+## Troubleshooting
+
+### npm : File C:\Program Files\nodejs\npm.ps1 cannot be loaded because running scripts is disabled on this system
+
+PowerShell บล็อก `npm.ps1` เพราะ execution policy — แก้โดยรันคำสั่งนี้ใน PowerShell ครั้งเดียว:
+
+```powershell
+Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
+```
+
+แล้วรัน `npm install` อีกครั้ง
+
+ถ้าไม่อยากเปลี่ยน policy ให้ใช้ `npm.cmd install` หรือรันใน Command Prompt (cmd) แทน PowerShell
+
+### ERR_CONNECTION_REFUSED ที่ http://localhost:5134/api/persons
+
+Backend ยังไม่ได้รัน — เปิด terminal ใหม่แล้ว:
+
+```bash
+cd backend/src/Example.Api
+dotnet run
+```
+
+รอจนขึ้น `Now listening on: http://localhost:5134` แล้วค่อยเปิดหน้า frontend หรือเรียก API
