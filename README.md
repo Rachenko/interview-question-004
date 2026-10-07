@@ -42,6 +42,7 @@ docker compose up -d
 # 2. Start the API (http://localhost:5134, applies migrations on startup)
 cd backend
 dotnet run --project src/Example.Api
+# Swagger UI (dev): http://localhost:5134/swagger
 
 # 3. Start the frontend (http://localhost:4200)
 cd frontend
